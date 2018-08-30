@@ -1,1 +1,1 @@
-
+采用的是Reachability和PING 结合判断网络状态，避免Reachability无法判断网络是否可用。
