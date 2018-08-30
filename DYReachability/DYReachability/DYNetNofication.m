@@ -87,16 +87,26 @@ static NSString *const hoststring = @"www.baidu.com";
 /** 根据状态栏获取详细的网络状态*/
 - (DYNetworkStatus)netWorkDetailStatus{
     UIApplication *app = [UIApplication sharedApplication];
-    UIView *statusBar = [app valueForKeyPath:@"statusBar"];
-    UIView *foregroundView = [statusBar valueForKeyPath:@"foregroundView"];
+  //  UIView *statusBar = [app valueForKeyPath:@"statusBar"];
     
+    id statusBar = [[UIApplication sharedApplication] valueForKey:@"statusBar"];
+    
+    NSArray *childrenView ;
+    if ([statusBar isKindOfClass:NSClassFromString(@"UIStatusBar_Modern")]) {
+        childrenView = [[[statusBar valueForKey:@"statusBar"] valueForKey:@"foregroundView"] subviews];
+    } else {
+        childrenView = [[statusBar valueForKey:@"foregroundView"] subviews];
+    }
+
     UIView *networkView = nil;
     
-    for (UIView *childView in foregroundView.subviews) {
+    for (UIView *childView in childrenView) {
         if ([childView isKindOfClass:NSClassFromString(@"UIStatusBarDataNetworkItemView")]) {
             networkView = childView;
         }
     }
+    
+    
     
     DYNetworkStatus status = DYNetworkStatusNone;
     if (networkView){
